@@ -2,16 +2,19 @@ import streamlit as st
 from deep_translator import GoogleTranslator
 from docx import Document
 from pdf2docx import Converter
-import pytesseract
 from pdf2image import convert_from_path
 from PIL import Image
+import easyocr
+import numpy as np
+
+# Initialize EasyOCR reader
+reader = easyocr.Reader(['en'])  # English OCR
 
 # Page setup
 st.set_page_config(page_title="Doc Translator", page_icon="🌐", layout="centered")
 st.title("📄 English → Hindi Translator")
 st.markdown("Upload a **PDF, Word, or Image file**, and download the Hindi translation.")
 
-# Translate text using deep-translator
 def translate_text(text, target_lang="hi"):
     return GoogleTranslator(source='auto', target=target_lang).translate(text)
 
@@ -50,7 +53,9 @@ if uploaded_file is not None:
             images = convert_from_path(filename)
             doc = Document()
             for img in images:
-                text = pytesseract.image_to_string(img)
+                img_array = np.array(img)
+                result = reader.readtext(img_array)
+                text = " ".join([res[1] for res in result])
                 if text.strip():
                     doc.add_paragraph(translate_text(text))
             doc.save(output_file)
@@ -58,12 +63,14 @@ if uploaded_file is not None:
     # Image
     elif filename.lower().endswith(("jpg", "jpeg", "png")):
         img = Image.open(filename)
-        text = pytesseract.image_to_string(img)
+        img_array = np.array(img)
+        result = reader.readtext(img_array)
+        text = " ".join([res[1] for res in result])
         doc = Document()
         doc.add_paragraph(translate_text(text))
         doc.save(output_file)
 
-    # Download
+    # Download button
     with open(output_file, "rb") as f:
         st.download_button(
             "⬇️ Download Hindi Document",

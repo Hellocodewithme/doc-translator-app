@@ -1,6 +1,7 @@
 streamlit
 deep-translator
-pytesseract
+easyocr
 pdf2docx
 pdf2image
 Pillow
+torch

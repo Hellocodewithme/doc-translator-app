@@ -1,7 +1,6 @@
-streamlit
+gradio
 deep-translator
-easyocr
+pytesseract
 pdf2docx
 pdf2image
 Pillow
-torch

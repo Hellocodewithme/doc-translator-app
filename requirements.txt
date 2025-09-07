@@ -1,6 +1,7 @@
 gradio
 deep-translator
-pytesseract
+docx
 pdf2docx
 pdf2image
+pytesseract
 Pillow

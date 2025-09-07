@@ -1,5 +1,5 @@
 streamlit
-googletrans==4.0.0rc1
+deep-translator
 pytesseract
 pdf2docx
 pdf2image

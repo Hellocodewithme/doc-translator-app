@@ -1,5 +1,5 @@
 import streamlit as st
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 from docx import Document
 from pdf2docx import Converter
 import pytesseract
@@ -11,16 +11,15 @@ st.set_page_config(page_title="Doc Translator", page_icon="🌐", layout="center
 st.title("📄 English → Hindi Translator")
 st.markdown("Upload a **PDF, Word, or Image file**, and download the Hindi translation.")
 
-translator = Translator()
+# Translate text using deep-translator
+def translate_text(text, target_lang="hi"):
+    return GoogleTranslator(source='auto', target=target_lang).translate(text)
 
-def translate_text(text, dest_lang="hi"):
-    return translator.translate(text, dest=dest_lang).text
-
-def translate_docx(input_docx, output_docx="translated.docx", dest_lang="hi"):
+def translate_docx(input_docx, output_docx="translated.docx", target_lang="hi"):
     doc = Document(input_docx)
     for para in doc.paragraphs:
         if para.text.strip():
-            para.text = translate_text(para.text, dest_lang)
+            para.text = translate_text(para.text, target_lang)
     doc.save(output_docx)
     return output_docx
 
